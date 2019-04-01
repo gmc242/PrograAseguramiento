@@ -2,10 +2,12 @@
 def main():
 
     #print(fecha_es_tupla((2015,4,2)))
-    #print(bisiesto(2020))
+    #print(bisiesto(400))
     #print(fecha_es_valida((2020,2,30)))
     #print(dia_siguiente((2020, 2, 29)))
-    print(dias_desde_primero_enero((2019, 4, 1)))
+    #print(dias_desde_primero_enero((2019, 4, 1)))
+    #print(dia_primero_enero(1000))
+    print(dia_cualquiera((2019, 2, 1)))
 
 # R0 se encarga de verificar si es una tupla de 3 valores positivos enteros
 # Input esperado: Un tipo de datos Tupla (tuple) con un largo de 3 (len(fecha) == 3)
@@ -94,6 +96,7 @@ def maximo_dia_por_mes(mes, anio):
 # Input esperado: Una tupla con el formato válido de fecha
 # Tipo de retorno: Booleano
 # Retorno: True si es una fecha coherente con el calendario Gregoriano, False de otro modo
+# Requerimiento R2
 def fecha_es_valida(fecha):
 
     if not fecha_es_tupla(fecha):
@@ -121,6 +124,7 @@ def fecha_es_valida(fecha):
 # Input esperado: Una tupla (tuple) de tres valores enteros que represente una fecha válida
 # Tipo de retorno: Una tupla de tres valores enteros, que representa una fecha válida
 # Retorno: La fecha correspondiente al próxima día de la fecha ingresada.
+# Requerimiento R3
 def dia_siguiente(fecha):
 
     if fecha_es_valida(fecha):
@@ -149,6 +153,7 @@ def dia_siguiente(fecha):
 # Retorno: Cantidad de días transcurridos desde el primero de enero de un año hasta una fecha dada en ese año.
 # Tomando en cuenta que la especificación del requerimiento exige que:
 # El transcuro entre el primero de enero y el mismo día es 0.
+# Requerimiento R4
 def dias_desde_primero_enero(fecha):
 
     if fecha_es_valida(fecha):
@@ -168,7 +173,63 @@ def dias_desde_primero_enero(fecha):
 
     else:
         raise Exception("La fecha ingresada no es válida.")
+
+# Función que retorna el día de la semana del primero de enero para un año dado
+# Input esperado: Un entero positivo mayor a 0 representando un año
+# Tipo de retorno: Entero
+# Retorno: Un entero en el rango de [0-6] que codifica el día de la semana
+# dom = 0, lun = 1, mar = 2, mierc = 3, jue = 4, vier = 5, sab = 6
+# Requerimiento R5
+def dia_primero_enero(anio):
+
+    # Calcula la cantidad de años bisiestos que han pasado hasta el año dado
+    #bisiestos = (anio // 4) + ((anio // 400) - (anio // 100))
     
+    bisiestos = 0 # Contador de años bisiestos
+    for anio_i in range(0, anio+1, 4):
+        if anio_i != 0 and bisiesto(anio_i):
+            bisiestos += 1  # Aumenta cada vez que encuentra un año bisiesto según el calendario gregoriano
+
+    # Calcula el día de la semana que correspondiente al año.
+    # Se aumenta un día por año y un día más por cada año bisiesto 
+    dia = (anio + bisiestos) % 7
+
+    # Agrega un offset de 6, debido a que el primero de enero del año 1 fue un Sábado = 6
+    dia_final = (6 + dia) % 7
+
+    if bisiesto(anio):
+        return dia_final # Si el año es bisiesto la fecha está correcta
+    else:
+        return (dia_final + 1) % 7 # Si el año no es bisiesto, se debe tomar en cuenta un offset de uno
+        # El offset proviene del 
+
+# Función encargada de utilizar información anterior para calcular el día de la semana para una fecha
+# Input esperado: Una tupla (tuple) que representa una fecha válida.
+# Tipo Retorno: Entero
+# Retorno:  en el rango de [0-6] que codifica el día de la semana
+# dom = 0, lun = 1, mar = 2, mierc = 3, jue = 4, vier = 5, sab = 6
+def dia_cualquiera(fecha):
+
+    if(fecha_es_valida(fecha)):
+
+        anio = fecha[0] # Esta asignación permite mayor claridad en el código posterior
+
+        # Primer día de la semana en el año correspondiente a la fecha
+        dia_primero = dia_primero_enero(anio)
+
+        # Cantidad de días transcurridos desde el primero de Enero en el año
+        dias_transcurridos_anio = dias_desde_primero_enero(fecha)
+
+        # Días que se deben agregar al primer día del año
+        dia_offset = dias_transcurridos_anio % 7
+
+        # Resultado final
+        dia_final = (dia_primero + dia_offset) % 7
+
+        return dia_final 
+    else:
+        raise Exception("La fecha no es válida")
+
 
 # Convención de Python para ejecutar el método main
 if __name__ == "__main__":
