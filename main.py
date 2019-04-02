@@ -7,7 +7,8 @@ def main():
     #print(dia_siguiente((2020, 2, 29)))
     #print(dias_desde_primero_enero((2019, 4, 1)))
     #print(dia_primero_enero(1000))
-    print(dia_cualquiera((2019, 2, 1)))
+    #print(dia_cualquiera((2019, 2, 1)))
+    imprimir3x4(2019)
 
 # R0 se encarga de verificar si es una tupla de 3 valores positivos enteros
 # Input esperado: Un tipo de datos Tupla (tuple) con un largo de 3 (len(fecha) == 3)
@@ -230,6 +231,76 @@ def dia_cualquiera(fecha):
     else:
         raise Exception("La fecha no es válida")
 
+
+# Función que retorna graficamente el calendario del año
+# Input esperado: Un entero positivo mayor a 0 representando un año
+# Tipo de retorno: Grafico
+# Retorno: representación grafica del año
+# dom = 0, lun = 1, mar = 2, mierc = 3, jue = 4, vier = 5, sab = 6
+# Requerimiento R6
+def imprimir3x4(anio):
+
+    #Primero se obtiene del día del que se va a comenzar
+
+    dias_de_semana = " D L K M J V S | D L K M J V S | D L K M J V S | D L K M J V S"
+    meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]
+    Fila0 = ""
+    Fila1 = ""
+    Fila2 = ""
+    Fila3 = ""
+    Fila4 = ""
+    Fila5 = ""
+    pos_dia = dia_primero_enero(anio) #Posición del día de semana( D L K M J V S)
+
+    Año = []
+    for mes in meses:
+
+        matrix_mes= fill_matrix([[],[],[],[],[],[]])
+        dias = cant_dias(mes,bisiesto(anio))
+        cont = 0
+        dia_actual = 1
+        semana = 0
+        while (cont < dias):
+            matrix_mes[semana][pos_dia] = dia_actual
+            pos_dia += 1
+            if(pos_dia > 6):
+                pos_dia = 0
+                semana+= 1
+            dia_actual += 1
+            cont += 1
+        Año += [matrix_mes]
+
+
+    print("     " + meses[0] + "     |    " + meses[1] + "    |    " + meses[2] + "      |     " + meses[3] + "   " )
+    print(dias_de_semana)
+    for mes in range(0,4):
+        for dia in (Año[mes][0]):
+            Fila0 += " " + str(dia)
+        Fila0 += "|"
+    print(Fila0)
+    for mes in range(0,4):
+        for dia in (Año[mes][1]):
+            Fila1 += " " + str(dia)
+        Fila1 += "|"
+    print(Fila1)
+
+
+
+def cant_dias(mes,bisiesto):
+    if(mes == "Febrero"):
+        if(bisiesto):
+            return 29
+        else:
+            return 28
+    elif(mes == "Abril" or mes == "Junio" or mes == "Septiembre" or mes== "Noviembre"):
+        return 30
+    else:
+        return 31
+
+def fill_matrix(mes):
+    for semana in mes:
+        semana += [0,0,0,0,0,0,0]
+    return mes
 
 # Convención de Python para ejecutar el método main
 if __name__ == "__main__":
