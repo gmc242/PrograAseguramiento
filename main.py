@@ -242,7 +242,7 @@ def imprimir3x4(anio):
 
     #Primero se obtiene del día del que se va a comenzar
 
-    dias_de_semana = " D L K M J V S | D L K M J V S | D L K M J V S | D L K M J V S"
+    dias_de_semana = "  D  L  K  M  J  V  S  |  D  L  K  M  J  V  S  |  D  L  K  M  J  V  S  |  D  L  K  M  J  V  S  |"
     meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]
     Fila0 = ""
     Fila1 = ""
@@ -271,20 +271,28 @@ def imprimir3x4(anio):
         Año += [matrix_mes]
 
 
-    print("     " + meses[0] + "     |    " + meses[1] + "    |    " + meses[2] + "      |     " + meses[3] + "   " )
-    print(dias_de_semana)
-    for mes in range(0,4):
-        for dia in (Año[mes][0]):
-            Fila0 += " " + str(dia)
-        Fila0 += "|"
-    print(Fila0)
-    for mes in range(0,4):
-        for dia in (Año[mes][1]):
-            Fila1 += " " + str(dia)
-        Fila1 += "|"
-    print(Fila1)
-
-
+    for x in range(0,3):
+        if(x == 0):
+            print()
+            print("         " + meses[0] + "         |        " + meses[1] + "        |         " + meses[2] + "         |         " + meses[3] + "         | \n" + dias_de_semana)
+            for semana in range(0,6):
+                for mes in range(0,4):
+                    print(listaToString(Año[mes][semana]),end="")
+                print()
+        elif(x == 1):
+            print()
+            print("          " + meses[4] + "         |         " + meses[5] + "         |         " + meses[6] + "         |        " + meses[7] + "         | \n" + dias_de_semana )
+            for semana in range(0,6):
+                for mes in range(4,8):
+                    print(listaToString(Año[mes][semana]),end="")
+                print()
+        elif(x == 2):
+            print()
+            print("       " + meses[8] + "      |        " + meses[9] + "        |       " + meses[10] + "       |       " + meses[11] + "       | \n" + dias_de_semana)
+            for semana in range(0,6):
+                for mes in range(8,12):
+                    print(listaToString(Año[mes][semana]),end="")
+                print()
 
 def cant_dias(mes,bisiesto):
     if(mes == "Febrero"):
@@ -296,6 +304,19 @@ def cant_dias(mes,bisiesto):
         return 30
     else:
         return 31
+
+def listaToString(lista):
+    listaString = ""
+    for i in lista:
+        if(i < 10 and i != 0):
+            listaString += "  " + str(i)
+        elif(i>9):
+            listaString += " " + str(i)
+        elif(i == 0):
+            listaString += "   "
+
+    listaString += "  |"
+    return listaString
 
 def fill_matrix(mes):
     for semana in mes:
