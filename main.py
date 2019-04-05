@@ -8,7 +8,7 @@ def main():
     #print(dias_desde_primero_enero((2019, 4, 1)))
     #print(dia_primero_enero(1000))
     #print(dia_cualquiera((2019, 2, 1)))
-    imprimir3x4(2019)
+    imprimir3x4(1582)
 
 # R0 se encarga de verificar si es una tupla de 3 valores positivos enteros
 # Input esperado: Un tipo de datos Tupla (tuple) con un largo de 3 (len(fecha) == 3)
@@ -271,7 +271,10 @@ def imprimir3x4(anio):
             if(pos_dia > 6):
                 pos_dia = 0
                 semana+= 1
-            dia_actual += 1
+            if(anio == 1582 and mes == "Octubre" and dia_actual== 4):
+                dia_actual = 15
+            else:
+                dia_actual += 1
             cont += 1
         #Se agrega el mes al lista del año
         Año += [matrix_mes]
