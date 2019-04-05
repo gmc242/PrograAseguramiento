@@ -236,57 +236,63 @@ def dia_cualquiera(fecha):
 # Input esperado: Un entero positivo mayor a 0 representando un año
 # Tipo de retorno: Grafico
 # Retorno: representación grafica del año
-# dom = 0, lun = 1, mar = 2, mierc = 3, jue = 4, vier = 5, sab = 6
 # Requerimiento R6
 def imprimir3x4(anio):
 
-    #Primero se obtiene del día del que se va a comenzar
-
+    # Primero tenemos un String con los Días de la semana que se van a utilizar a la otra de imprimir
     dias_de_semana = "  D  L  K  M  J  V  S  |  D  L  K  M  J  V  S  |  D  L  K  M  J  V  S  |  D  L  K  M  J  V  S  |"
-    meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]
-    Fila0 = ""
-    Fila1 = ""
-    Fila2 = ""
-    Fila3 = ""
-    Fila4 = ""
-    Fila5 = ""
-    pos_dia = dia_primero_enero(anio) #Posición del día de semana( D L K M J V S)
 
+    # Array de Strings con los meses para guiarse a la hora de imprimirlos
+    meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]
+
+    # Posición del día de semana( D L K M J V S), en este caso es el primero de enero del año solicitado
+    pos_dia = dia_primero_enero(anio)
+
+    #El array Año va a guardar los 12 meses, representados por 6 listas(semanas) y dentro de estas los días
     Año = []
     for mes in meses:
-
+        # Esta va a ser la matriz para el mes compuesta de 6 arrays vacios
+        # Se llena la matriz con 0 que futuramente serán los espacios en blanco
         matrix_mes= fill_matrix([[],[],[],[],[],[]])
+        # Se calcula la cantidad de días para el mes, y tambien si es bisiesto
         dias = cant_dias(mes,bisiesto(anio))
+        # Contador para el while que llevara el conteo de días
         cont = 0
+        # Dia de la semana que se va a poner
         dia_actual = 1
+        # Semana actual en la que es esta escribiendo
         semana = 0
         while (cont < dias):
+            # Se asigna el dia a la matriz, con el día actual
             matrix_mes[semana][pos_dia] = dia_actual
+            # Se el dia de la semana ( L -> K )
             pos_dia += 1
+            # En caso de que se un cambio de Domingo a Lunes se cambia de 6 a 0 y cambiamos de semana
             if(pos_dia > 6):
                 pos_dia = 0
                 semana+= 1
             dia_actual += 1
             cont += 1
+        #Se agrega el mes al lista del año
         Año += [matrix_mes]
 
-
-    for x in range(0,3):
-        if(x == 0):
+    #Comenzamos a imprimir
+    for linea in range(0,3):
+        if(linea == 0):
             print()
             print("         " + meses[0] + "         |        " + meses[1] + "        |         " + meses[2] + "         |         " + meses[3] + "         | \n" + dias_de_semana)
             for semana in range(0,6):
                 for mes in range(0,4):
                     print(listaToString(Año[mes][semana]),end="")
                 print()
-        elif(x == 1):
+        elif(linea == 1):
             print()
             print("          " + meses[4] + "         |         " + meses[5] + "         |         " + meses[6] + "         |        " + meses[7] + "         | \n" + dias_de_semana )
             for semana in range(0,6):
                 for mes in range(4,8):
                     print(listaToString(Año[mes][semana]),end="")
                 print()
-        elif(x == 2):
+        elif(linea == 2):
             print()
             print("       " + meses[8] + "      |        " + meses[9] + "        |       " + meses[10] + "       |       " + meses[11] + "       | \n" + dias_de_semana)
             for semana in range(0,6):
