@@ -121,7 +121,7 @@ def fecha_es_valida(fecha):
 
 #print(fecha_es_valida((2020,2,30)))
 
-# Esta función se encarga de retornar para cualquier fecha su día siguiente en el formato establecio
+# Esta función se encarga de retornar para cualquier fecha su día siguiente en el formato establecido
 # Input esperado: Una tupla (tuple) de tres valores enteros que represente una fecha válida
 # Tipo de retorno: Una tupla de tres valores enteros, que representa una fecha válida
 # Retorno: La fecha correspondiente al próxima día de la fecha ingresada.
@@ -209,7 +209,8 @@ def dia_primero_enero(anio):
 # Tipo Retorno: Entero
 # Retorno:  en el rango de [0-6] que codifica el día de la semana
 # dom = 0, lun = 1, mar = 2, mierc = 3, jue = 4, vier = 5, sab = 6
-def dia_cualquiera(fecha):
+# Requerimiento R7 
+def dia_semana(fecha):
 
     if(fecha_es_valida(fecha)):
 
