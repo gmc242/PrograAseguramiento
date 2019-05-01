@@ -14,9 +14,10 @@ def main():
 
     # Asignacion 3b
 
-    print(fecha_futura((2019, 4, 3), 365)) 
-    print(dias_entre((2020, 4, 2), (2019, 4, 3)))
-    print(dia_semana((2024, 5, 27)))
+    #print(fecha_futura((2019, 4, 3), 365)) 
+    #print(dias_entre((2020, 4, 2), (2019, 4, 3)))
+    #print(dia_semana((2024, 5, 27)))
+    #print(dia_inicio_mes(2020, 5))
 
 # R0 se encarga de verificar si es una tupla de 3 valores positivos enteros
 # Input esperado: Un tipo de datos Tupla (tuple) con un largo de 3 (len(fecha) == 3)
@@ -48,7 +49,6 @@ def fecha_es_tupla(fecha):
     else:
         return False
 
-#R0((2015,4,2))
 
 # Esta función se encarga de hacer un pequeño cálcula para revisar si uno año es bisiesto o no
 # Input esperado: Un entero positivo, correspondiente a un año
@@ -87,7 +87,9 @@ def maximo_dia_por_mes(mes, anio):
     # la cantidad alterna entre 31 y 30 (28 o 29 para Febrero) según la paridad del número de mes
     # El ciclo se reinicia en Agosto
     # ((mes % 7) % 2) Indica la paridad mencionada, si es 0 la cantidad de días será 30.
- 
+    # Julio es un caso limite que falla para la logica aplicada
+    # Se debe hacer la revision primero si (mes % 7) != 0, de no ser asi se sabe que el mes es julio y que debe ser 31 
+
     # Febrero es un caso especial, se debe revisar si es bisiesto.
     if mes == 2:
         if(bisiesto(anio)):
@@ -95,14 +97,12 @@ def maximo_dia_por_mes(mes, anio):
         else: 
             return 28 # No es bisiesto
 
-    elif mes == 7:
-        return 31 # Es un caso especial para logica aplicada 7 % 7 = 0 y 0 % 2 = 0 
-
     # Revisa la lógica mencionada anteriormente de la paridad por mes.
-    elif ((mes % 7) % 2) == 0:
+    elif (mes % 7) != 0 and ((mes % 7) % 2) == 0:
         return 30 # Es par
     else:
         return 31 # Es impar
+
 
 # Esta función se encarga de realizar una validación sobre los datos ingresados
 # Input esperado: Una tupla con el formato válido de fecha
@@ -130,7 +130,6 @@ def fecha_es_valida(fecha):
         else:
             return False # El mes no está en el rango válido [1, 12]
 
-#print(fecha_es_valida((2020,2,30)))
 
 # Esta función se encarga de retornar para cualquier fecha su día siguiente en el formato establecido
 # Input esperado: Una tupla (tuple) de tres valores enteros que represente una fecha válida
@@ -157,6 +156,7 @@ def dia_siguiente(fecha):
 
     else:
         raise Exception("La fecha ingresada no es válida.")
+
 
 # Esta función se encarga de calcular los dias transcurridos hasta una fecha indicada,
 # desde el primero de enero del mismo año de la fecha.
@@ -186,6 +186,7 @@ def dias_desde_primero_enero(fecha):
     else:
         raise Exception("La fecha ingresada no es válida.")
 
+
 # Función que retorna el día de la semana del primero de enero para un año dado
 # Input esperado: Un entero positivo mayor a 0 representando un año
 # Tipo de retorno: Entero
@@ -213,7 +214,7 @@ def dia_primero_enero(anio):
         return dia_final # Si el año es bisiesto la fecha está correcta
     else:
         return (dia_final + 1) % 7 # Si el año no es bisiesto, se debe tomar en cuenta un offset de uno
-        # El offset proviene del 
+
 
 # Funcion encargada de devolver una fecha valida a n dias de esta
 # Input esperado: Una tupla (tuple) que representa una fecha valida y un entero positvo
@@ -222,18 +223,32 @@ def dia_primero_enero(anio):
 # Requerimiento R7
 def fecha_futura(fecha, n_dias):
 
-    # Variable para contar los dias traspasados
-    cont = 0
+    # Valida la fecha
+    if not fecha_es_valida(fecha):
 
-    # Variable que guarda la fecha de retorno
-    retorno = fecha
+        raise Exception("La fecha ingresada no es valida.")
 
-    # Por cada dia obtiene la fecha siguiente
-    while cont < n_dias:
-        retorno = dia_siguiente(retorno)
-        cont += 1
+    # Valida la cantidad de dias
+    elif n_dias < 0:
 
-    return retorno
+        raise Exception("La cantidad de dias debe ser un entero no negativo.")
+
+    else:
+
+        # Variable para contar los dias traspasados
+        cont = 0
+
+        # Variable que guarda la fecha de retorno
+        retorno = fecha
+
+        # Por cada dia obtiene la fecha siguiente
+        while cont < n_dias:
+            retorno = dia_siguiente(retorno)
+            cont += 1
+
+        # Retorna la fecha aumentando los n_dias
+        return retorno
+
 
 # Funcion encargada de devolver la cantidad de dias entre dos fechas validas
 # Input esperado: Dos tuples (tuple) que representan dos fechas validas
@@ -242,22 +257,37 @@ def fecha_futura(fecha, n_dias):
 # Requerimiento R8
 def dias_entre(f1, f2):
 
-    # Por definicion python compara por elemento cada tuple
-    if f1 > f2:
-        mayor = f1
-        menor = f2
+    # Valida fecha1
+    if not fecha_es_valida(f1):
+
+        raise Exception("La fecha 1 es inválida.")
+
+    # Valida fecha2 
+    elif not fecha_es_valida(f2):
+
+        raise Exception("La fecha 2 es inválida.")
+
     else:
-        mayor = f2
-        menor = f1
 
-    cont_dias = 0
+        # Se identifica la fecha mayor y la menor
+        # Por definicion python compara por elemento cada tuple, esta comparacion es correcta para el contexto dado
+        if f1 > f2:
+            mayor = f1
+            menor = f2
+        else:
+            mayor = f2
+            menor = f1
 
-    while menor < mayor:
-        cont_dias += 1
-        menor = dia_siguiente(menor)
-    
-    return cont_dias
+        cont_dias = 0
+
+        # Por obtenida la fecha menor, la logica es obtener la fecha siguiente
+        # hasta que el menor sea igual al mayor, manteniendo un contador de dias entre cada uno
+        while menor < mayor:
+            cont_dias += 1
+            menor = dia_siguiente(menor)
         
+        # Retorna la cantidad de días contados entre fechas
+        return cont_dias
 
 
 # Función encargada de utilizar información anterior para calcular el día de la semana para una fecha
@@ -286,9 +316,22 @@ def dia_semana(fecha):
 
         return dia_final 
     else:
-        raise Exception("La fecha no es válida")
+        raise Exception("La fecha no es válida.")
 
 
+# Función encargada de retornar el dia de la semana para el primer dia de un mes en un año dado
+# Input esperado: Dos enteros, uno representando el año y el otro el mes
+# Tipo Retorno: Entero
+# Retorno:  en el rango de [0-6] que codifica el día de la semana
+# dom = 0, lun = 1, mar = 2, mierc = 3, jue = 4, vier = 5, sab = 6
+# Requerimiento R10
+def dia_inicio_mes(anio, mes):
+
+    # Revisa si el primero del mes y año dado es valido
+    if fecha_es_valida((anio,mes,1)):
+        return dia_semana((anio, mes,1))
+    else:
+        raise Exception("La fecha no es válida.")
 
 
 # Función que retorna graficamente el calendario del año
@@ -309,18 +352,24 @@ def imprimir3x4(anio):
 
     #El array Año va a guardar los 12 meses, representados por 6 listas(semanas) y dentro de estas los días
     Año = []
+
+    # Variable que tomara el numero del mes dento del ciclo
+    mes_n = 1
+
     for mes in meses:
+
         # Esta va a ser la matriz para el mes compuesta de 6 arrays vacios
         # Se llena la matriz con 0 que futuramente serán los espacios en blanco
         matrix_mes= fill_matrix([[],[],[],[],[],[]])
         # Se calcula la cantidad de días para el mes, y tambien si es bisiesto
-        dias = cant_dias(mes,bisiesto(anio))
+        dias = maximo_dia_por_mes(mes_n, anio)
         # Contador para el while que llevara el conteo de días
         cont = 0
         # Dia de la semana que se va a poner
         dia_actual = 1
         # Semana actual en la que es esta escribiendo
         semana = 0
+
         while (cont < dias):
             # Se asigna el dia a la matriz, con el día actual
             matrix_mes[semana][pos_dia] = dia_actual
@@ -335,10 +384,25 @@ def imprimir3x4(anio):
             else:
                 dia_actual += 1
             cont += 1
+
         #Se agrega el mes al lista del año
         Año += [matrix_mes]
 
+        # Se aumenta el numero del mes
+        mes_n += 1
+
     #Comenzamos a imprimir
+    
+    # Ciclo reducido no funciona por los espacios en los meses
+    #for linea in range(0, 3):
+    #    print()
+    #    print("         " + meses[(4 * linea)] + "         |        " + meses[(4 * linea) + 1] + "        |         " + meses[(4 * linea) + 2] + "         |         " + meses[(4 * linea) + 3] + "         | \n" + dias_de_semana)
+    #    for semana in range(0, 6):
+    #        for mes in range((4 * linea), (4 * (linea + 1))):
+    #            print(listaToString(Año[mes][semana]), end="")   
+    #        print() 
+
+
     for linea in range(0,3):
         if(linea == 0):
             print()
@@ -362,16 +426,6 @@ def imprimir3x4(anio):
                     print(listaToString(Año[mes][semana]),end="")
                 print()
 
-def cant_dias(mes,bisiesto):
-    if(mes == "Febrero"):
-        if(bisiesto):
-            return 29
-        else:
-            return 28
-    elif(mes == "Abril" or mes == "Junio" or mes == "Septiembre" or mes== "Noviembre"):
-        return 30
-    else:
-        return 31
 
 def listaToString(lista):
     listaString = ""
@@ -386,6 +440,11 @@ def listaToString(lista):
     listaString += "  |"
     return listaString
 
+
+# Funcion que se encarga de rellenar la matriz para cada mes con ceros
+# Input: Una matriz que representa un mes
+# Output: Ninguno
+# Accion: Llena la matriz con listas de 0's
 def fill_matrix(mes):
     for semana in mes:
         semana += [0,0,0,0,0,0,0]
