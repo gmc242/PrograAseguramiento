@@ -1,6 +1,8 @@
 
 def main():
 
+    # Asignacion 3a
+
     #print(fecha_es_tupla((2015,4,2)))
     #print(bisiesto(400))
     #print(fecha_es_valida((2020,2,30)))
@@ -8,7 +10,13 @@ def main():
     #print(dias_desde_primero_enero((2019, 4, 1)))
     #print(dia_primero_enero(1000))
     #print(dia_cualquiera((2019, 2, 1)))
-    imprimir3x4(1582)
+    #imprimir3x4(1582)
+
+    # Asignacion 3b
+
+    print(fecha_futura((2019, 4, 3), 365)) 
+    print(dias_entre((2020, 4, 2), (2019, 4, 3)))
+    print(dia_semana((2024, 5, 27)))
 
 # R0 se encarga de verificar si es una tupla de 3 valores positivos enteros
 # Input esperado: Un tipo de datos Tupla (tuple) con un largo de 3 (len(fecha) == 3)
@@ -86,6 +94,9 @@ def maximo_dia_por_mes(mes, anio):
             return 29 # Es bisiesto
         else: 
             return 28 # No es bisiesto
+
+    elif mes == 7:
+        return 31 # Es un caso especial para logica aplicada 7 % 7 = 0 y 0 % 2 = 0 
 
     # Revisa la lógica mencionada anteriormente de la paridad por mes.
     elif ((mes % 7) % 2) == 0:
@@ -204,12 +215,57 @@ def dia_primero_enero(anio):
         return (dia_final + 1) % 7 # Si el año no es bisiesto, se debe tomar en cuenta un offset de uno
         # El offset proviene del 
 
+# Funcion encargada de devolver una fecha valida a n dias de esta
+# Input esperado: Una tupla (tuple) que representa una fecha valida y un entero positvo
+# Tipo de Retorno: Una tupla (tuple) 
+# Retorno: Fecha valida a n dias de la fecha ingresada
+# Requerimiento R7
+def fecha_futura(fecha, n_dias):
+
+    # Variable para contar los dias traspasados
+    cont = 0
+
+    # Variable que guarda la fecha de retorno
+    retorno = fecha
+
+    # Por cada dia obtiene la fecha siguiente
+    while cont < n_dias:
+        retorno = dia_siguiente(retorno)
+        cont += 1
+
+    return retorno
+
+# Funcion encargada de devolver la cantidad de dias entre dos fechas validas
+# Input esperado: Dos tuples (tuple) que representan dos fechas validas
+# Tipo de Retorno: Un entero
+# Retorno: Cantidad de dias entre ambas fechas
+# Requerimiento R8
+def dias_entre(f1, f2):
+
+    # Por definicion python compara por elemento cada tuple
+    if f1 > f2:
+        mayor = f1
+        menor = f2
+    else:
+        mayor = f2
+        menor = f1
+
+    cont_dias = 0
+
+    while menor < mayor:
+        cont_dias += 1
+        menor = dia_siguiente(menor)
+    
+    return cont_dias
+        
+
+
 # Función encargada de utilizar información anterior para calcular el día de la semana para una fecha
 # Input esperado: Una tupla (tuple) que representa una fecha válida.
 # Tipo Retorno: Entero
 # Retorno:  en el rango de [0-6] que codifica el día de la semana
 # dom = 0, lun = 1, mar = 2, mierc = 3, jue = 4, vier = 5, sab = 6
-# Requerimiento R7 
+# Requerimiento R9
 def dia_semana(fecha):
 
     if(fecha_es_valida(fecha)):
@@ -231,6 +287,8 @@ def dia_semana(fecha):
         return dia_final 
     else:
         raise Exception("La fecha no es válida")
+
+
 
 
 # Función que retorna graficamente el calendario del año
