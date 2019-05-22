@@ -17,7 +17,7 @@ def main():
     #print(fecha_futura((2019, 4, 3), 365)) 
     #print(dias_entre((2020, 4, 2), (2019, 4, 3)))
     #print(dia_semana((2024, 5, 27)))
-    #print(dia_inicio_mes(2020, 5))
+    print(dia_inicio_mes(2020, 5))
 
 # R0 se encarga de verificar si es una tupla de 3 valores positivos enteros
 # Input esperado: Un tipo de datos Tupla (tuple) con un largo de 3 (len(fecha) == 3)
@@ -89,6 +89,10 @@ def maximo_dia_por_mes(mes, anio):
     # ((mes % 7) % 2) Indica la paridad mencionada, si es 0 la cantidad de días será 30.
     # Julio es un caso limite que falla para la logica aplicada
     # Se debe hacer la revision primero si (mes % 7) != 0, de no ser asi se sabe que el mes es julio y que debe ser 31 
+
+    # Si es Octubre de 1582 es un caso bastante especial, se quitaron 10 días del calendario
+    if mes == 10 and anio == 1582:
+        return 21
 
     # Febrero es un caso especial, se debe revisar si es bisiesto.
     if mes == 2:
